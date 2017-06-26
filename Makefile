@@ -6,3 +6,6 @@ run:
 
 virtualenv:
 	./speedtest/bin/activate
+
+run-prod:
+	gunicorn -b 0.0.0.0:8000 --daemon

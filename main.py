@@ -38,6 +38,7 @@ class Obs(db.Model):
 def index():
     return render_template("index.html")
 
+
 @app.route("/data/")
 def get_data():
     data = Obs.query.order_by(Obs.dt)

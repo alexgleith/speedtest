@@ -1,0 +1,51 @@
+<head>
+  <!-- Plotly.js -->
+  <script src="/static/plotly.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+  
+  <b>Speed</b>
+  <div id="speed" style="width: 800px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+  <b>Ping</b>
+  <div id="ping" style="width: 800px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+  <script>
+  	the_data = null;
+    var jsonData = $.ajax({
+			url: '/data',
+			dataType: 'json',
+		}).done(function (results) {
+			console.log(results);
+			the_data = results.json_list;
+			var dates = [];
+			var speed=[];
+			var ping=[];
+
+			for (var i = 0; i < the_data.length; i++) {
+				dates.push(the_data[i].dt);
+				speed.push(the_data[i].speed);
+				ping.push(the_data[i].ping);
+			}
+			var speed_data = [
+			  {
+			    x: dates,
+			    y: speed,
+			    type: 'scatter',
+			    name: 'Speed'
+			  }
+			];
+			Plotly.newPlot('speed', speed_data);
+			var ping_data = [
+			  {
+			    x: dates,
+			    y: ping,
+			    type: 'scatter',
+			    name: 'Ping'
+			  }
+			];
+			Plotly.newPlot('ping', ping_data);
+	});
+  </script>
+</body>

@@ -7,51 +7,48 @@
 <body>
   <div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
   <script>
-  	the_data = null;
     var jsonData = $.ajax({
-			url: '/data',
-			dataType: 'json',
-		}).done(function (results) {
-			console.log(results);
-			the_data = results.json_list;
-			var dates = [];
-			var speed=[];
-			var ping=[];
+      url: '/data',
+      dataType: 'json',
+    }).done(function (results) {
+      var the_data = results.json_list;
+      var dates = [];
+      var speed = [];
+      var ping = [];
 
-			for (var i = 0; i < the_data.length; i++) {
-				dates.push(the_data[i].dt);
-				speed.push(the_data[i].speed);
-				ping.push(the_data[i].ping);
-			}
+      for (var i = 0; i < the_data.length; i++) {
+        dates.push(the_data[i].dt);
+        speed.push(the_data[i].speed);
+        ping.push(the_data[i].ping);
+      }
 
-var speed = {
-  x: dates,
-  y: speed,
-  type: 'scatter',
-  name: 'speed'
-};
+      var speed_g = {
+        x: dates,
+        y: speed,
+        type: 'scatter',
+        name: 'speed'
+      };
 
-var ping = {
-  x: dates,
-  y: ping,
-  xaxis: 'x2',
-  yaxis: 'y2',
-  type: 'scatter',
-  name: 'ping'
-};
+      var ping_g = {
+        x: dates,
+        y: ping,
+        xaxis: 'x2',
+        yaxis: 'y2',
+        type: 'scatter',
+        name: 'ping'
+      };
 
 
-var data = [speed, ping];
+      var data = [speed_g, ping_g];
 
-var layout = {
-  yaxis: {domain: [0, 0.45]},
-  legend: {traceorder: 'reversed'},
-  xaxis2: {anchor: 'y2'},
-  yaxis2: {domain: [0.55, 1.0]},
-};
+      var layout = {
+        yaxis: {domain: [0, 0.45]},
+        legend: {traceorder: 'reversed'},
+        xaxis2: {anchor: 'y2'},
+        yaxis2: {domain: [0.55, 1.0]},
+      };
 
-Plotly.newPlot('myDiv', data, layout);
-
-	});
+      Plotly.newPlot('myDiv', data, layout);
+  });
   </script>
 </body>

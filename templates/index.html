@@ -7,8 +7,27 @@
 <body>
   <div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
   <script>
+    
+    function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    var days = getParameterByName('days')
+    if (days) {
+        days = parseInt(days);
+    }
+    if (isNaN(days)) {
+        days = 30;
+    }
+    
     var jsonData = $.ajax({
-      url: '/data',
+      url: '/data/' + '?days=' + days,
       dataType: 'json',
     }).done(function (results) {
       var the_data = results.json_list;

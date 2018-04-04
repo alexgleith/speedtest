@@ -1,6 +1,7 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 import os
+import datetime
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -29,8 +30,8 @@ class Obs(db.Model):
         return {
             'id': self.id,
             'dt': self.dt.strftime("%Y-%m-%d %H:%M:%S"),
-            'ping': self.ping,
-            'speed': self.speed
+            'ping': round(self.ping, 0),
+            'speed': round(self.speed/1024/1024, 2)
         }
 
 
@@ -41,10 +42,17 @@ def index():
 
 @app.route("/data/")
 def get_data():
-    data = Obs.query.order_by(Obs.dt)
+    days = 30
+    try:
+        days = int(request.args.get('days')) 
+    except (TypeError, ValueError):
+        # Do nothing
+        print("Failed to convert to int")
+    from_date = datetime.datetime.today() - datetime.timedelta(days=days)
+    data = Obs.query.filter(Obs.dt > from_date).order_by(Obs.dt)
 
     return jsonify(json_list=[i.serialize for i in data.all()])
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

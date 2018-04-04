@@ -8,4 +8,8 @@ virtualenv:
 	./speedtest/bin/activate
 
 run-prod:
-	gunicorn -b 0.0.0.0:8000 --daemon
+	gunicorn main:app -b 0.0.0.0:8000 --daemon
+
+restart-prod:
+	pkill gunicorn
+	make run-prod
